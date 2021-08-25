@@ -15,11 +15,17 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.18",
-        "league/flysystem-memory": "^2.0",
+        "league/flysystem-memory": "2.1.0-alpha.1",
         "phpunit/phpunit": "^9.5",
         "psalm/plugin-phpunit": "^0.15.1",
         "vimeo/psalm": "^4.6"
     },
+    "repositories": [
+        {
+            "type": "github",
+            "url": "https://github.com/chapa/flysystem-memory.git"
+        }
+    ],
     "scripts": {
         "cs-check": "php-cs-fixer fix --dry-run",
         "cs-fix": "php-cs-fixer fix",

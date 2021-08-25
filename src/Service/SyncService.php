@@ -99,7 +99,7 @@ class SyncService
                         }
 
                         $fileIsMissing = !key_exists($path, $this->cache[$destination] ?? []);
-                        $fileIsOlder = $this->cache[$source][$path] ?? 0 > $this->cache[$destination][$path] ?? 0;
+                        $fileIsOlder = ($this->cache[$source][$path] ?? 0) > ($this->cache[$destination][$path] ?? 0);
 
                         if ($fileIsMissing || $fileIsOlder) {
                             yield [$path, $destination];

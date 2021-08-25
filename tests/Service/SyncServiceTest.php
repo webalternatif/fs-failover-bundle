@@ -55,6 +55,45 @@ class SyncServiceTest extends TestCase
         $this->assertEquals($content2, $innerAdapter3->read($file2));
     }
 
+    public function test_only_older_files_in_secondary_storages_are_replicated(): void
+    {
+        $innerAdapter1 = new InMemoryFilesystemAdapter();
+        $innerAdapter2 = new InMemoryFilesystemAdapter();
+
+        $innerAdapter1->write(
+            $file1 = 'file1',
+            $content11 = 'content11',
+            new Config(['timestamp' => 20])
+        );
+        $innerAdapter1->write(
+            $file2 = 'file2',
+            $content12 = 'content12',
+            new Config(['timestamp' => 20])
+        );
+        $innerAdapter2->write(
+            $file1,
+            $content21 = 'content21',
+            new Config(['timestamp' => 10])
+        );
+        $innerAdapter2->write(
+            $file2,
+            $content22 = 'content22',
+            new Config(['timestamp' => 30])
+        );
+
+        $syncService = $this->createSyncService([
+            $adapterName = 'adapter' => [
+                $innerAdapter1,
+                $innerAdapter2,
+            ],
+        ]);
+
+        $syncService->sync($adapterName);
+
+        $this->assertEquals($content11, $innerAdapter2->read($file1));
+        $this->assertEquals($content22, $innerAdapter2->read($file2));
+    }
+
     public function test_extra_files_in_secondary_storages_are_ignored_by_default(): void
     {
         $config = new Config();
